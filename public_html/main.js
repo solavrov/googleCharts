@@ -1,6 +1,12 @@
 /* global google, math */
 
 import {
+    runif,
+    rnorm,
+    makeHistData
+} from "./funs.js";
+
+import {
     drawColChart
 } from "./charts.js";
 
@@ -89,26 +95,6 @@ function initLine() {
 }
  
 // ---------------histogram--------------------
-
-function runif(n) {
-    let r = [];
-    for (let i = 0; i < n; i++) {
-        let x = 0;
-        while(x === 0) x = Math.random();
-        r.push(x);
-    }
-    return r;
-}
-
-function rnorm(n, m=0, sd=1) {
-    let u, v;    
-    u = runif(n);
-    v = runif(n);
-    let x = math.sqrt(math.multiply(-2, math.log(u)));
-    let y = math.cos(math.multiply(2 * Math.PI, v));
-    let sample = math.add(math.multiply(sd, math.dotMultiply(x, y)), m);
-    return math.transpose([sample]);
-}
 
 google.charts.setOnLoadCallback(initHist);
 
