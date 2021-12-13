@@ -47,9 +47,12 @@ function initLine() {
         
     };
 
+    let lineBut = document.getElementById("lineButton");
     var chart = new google.visualization.AreaChart(document.getElementById('line'));
 
     function draw() {
+        
+        lineBut.disabled = true;
         
         let d = [[0, 0]];
         for (let i = 1; i <= T; i++) {
@@ -71,6 +74,7 @@ function initLine() {
             chart.draw(data, options);
             setTimeout(function() {    
                 if (i - 1 <= T - 5) go(i);
+                else lineBut.disabled = false;
             }, T_DELAY);
         }
 
@@ -80,7 +84,6 @@ function initLine() {
     
     draw();
     
-    let lineBut = document.getElementById("lineButton");
     lineBut.addEventListener("click", draw);
 
 }
