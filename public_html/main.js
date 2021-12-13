@@ -3,7 +3,7 @@
 import {
     runif,
     rnorm,
-    makeHistData
+    makeHistogramData
 } from "./funs.js";
 
 import {
@@ -172,11 +172,7 @@ function initCol() {
     let chart = new google.visualization.ColumnChart(document.getElementById('col'));
 
     function draw() {
-        let data = [];
-        for (let i = -50; i <= 50; i++) {
-            let d = math.random(50);
-            data.push([i, d, d + ' in ' + i]);
-        }
+        let data = makeHistogramData(rnorm(1000, 0, 50), -100, 100, 5);     
         let dataTable = new google.visualization.DataTable();
         dataTable.addColumn('number', 'x');
         dataTable.addColumn('number', 'y');
@@ -196,11 +192,7 @@ function initCol() {
 // ---------------column chart 2---------------
 
 function draw() {
-    let data = [];
-    for (let i = -50; i <= 50; i++) {
-        let d = math.random(50);
-        data.push([i, d, d + ' in ' + i]);
-    }
+    let data = makeHistogramData(rnorm(1000, 0, 50), -100, 100, 5);
     drawColChart(document.getElementById('col2'), data);
 }
 
