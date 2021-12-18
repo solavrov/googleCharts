@@ -16,8 +16,8 @@ google.charts.load('current', {'packages':['corechart'], 'language':'ru'});
 // --------------line chart-----------------
 
 const T = 250;
-const Y_MIN = -Math.round(3 * Math.sqrt(T));
-const Y_MAX = Math.round(3 * Math.sqrt(T));
+const Y_MIN_START = -Math.round(1 * Math.sqrt(T));
+const Y_MAX_START = Math.round(1 * Math.sqrt(T));
 const T_STEP = 1;
 const T_DELAY = 1;
 
@@ -36,7 +36,7 @@ function initLine() {
 
         vAxis: {
           title: 'y',
-          viewWindow: { max: Y_MAX, min: Y_MIN}
+          viewWindow: { max: Y_MAX_START, min: Y_MIN_START}
         },
 
         backgroundColor: '#ffffff',
@@ -60,6 +60,11 @@ function initLine() {
         
         lineBut.disabled = true;
         
+        let y_max =  Y_MAX_START;
+        let y_min =  Y_MIN_START;
+        options.vAxis.viewWindow.max = y_max;
+        options.vAxis.viewWindow.min = y_min;
+        
         let d = [[0, 0]];
         for (let i = 1; i <= T; i++) {
             let r = [i, d[i - 1][1] + Math.sign(Math.random()-0.5)];
@@ -72,11 +77,16 @@ function initLine() {
         data.addRows([d[0]]);
         
         function go(i=1) {
-            data.addRows([d[i++]]);
-            data.addRows([d[i++]]);
-            data.addRows([d[i++]]);
-            data.addRows([d[i++]]);
-            data.addRows([d[i++]]);
+            for (let k = 0; k < 5; k++) {
+                if (d[i][1] > y_max) {
+                    options.vAxis.viewWindow.max = y_max = d[i][1];
+                    
+                }
+                if (d[i][1] < y_min) {
+                    options.vAxis.viewWindow.min = y_min = d[i][1];
+                }
+                data.addRows([d[i++]]);
+            }
             chart.draw(data, options);
             setTimeout(function() {    
                 if (i - 1 <= T - 5) go(i);
