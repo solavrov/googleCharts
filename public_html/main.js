@@ -47,7 +47,7 @@ function initLine() {
             duration: T_STEP
         },
         
-        chartArea: { width: 800 },
+        chartArea: {width: 800},
 
         legend: {position: 'none'}
         
@@ -65,22 +65,26 @@ function initLine() {
         options.vAxis.viewWindow.max = y_max;
         options.vAxis.viewWindow.min = y_min;
         
-        let d = [[0, 0]];
+        let d = [[0, 0, 'color: green']];
         for (let i = 1; i <= T; i++) {
-            let r = [i, d[i - 1][1] + Math.sign(Math.random()-0.5)];
+            let r, p = d[i - 1][1] + Math.sign(Math.random()-0.5);
+            if (p >= 0) r = [i, p, 'color: green'];
+            if (p < 0) r = [i, p, 'color: red'];
             d.push(r);
         }
+        
+        console.log(d);
         
         let data = new google.visualization.DataTable();
         data.addColumn('number', 'x');
         data.addColumn('number', 'y');
+        data.addColumn({type: 'string', role: 'style'});
         data.addRows([d[0]]);
         
         function go(i=1) {
             for (let k = 0; k < 5; k++) {
                 if (d[i][1] > y_max) {
-                    options.vAxis.viewWindow.max = y_max = d[i][1];
-                    
+                    options.vAxis.viewWindow.max = y_max = d[i][1]; 
                 }
                 if (d[i][1] < y_min) {
                     options.vAxis.viewWindow.min = y_min = d[i][1];
