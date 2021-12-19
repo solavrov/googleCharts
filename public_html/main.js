@@ -18,8 +18,8 @@ google.charts.load('current', {'packages':['corechart'], 'language':'ru'});
 const T = 250;
 const Y_MIN_START = -Math.round(1 * Math.sqrt(T));
 const Y_MAX_START = Math.round(1 * Math.sqrt(T));
-const T_STEP = 1;
-const T_DELAY = 1;
+//const T_STEP = 1;
+const T_DELAY = 20;
 
 google.charts.setOnLoadCallback(initLine);
 
@@ -43,9 +43,9 @@ function initLine() {
         width: 900,
         height: 500,
         
-        animation: {
-            duration: T_STEP
-        },
+//        animation: {
+//            duration: T_STEP
+//        },
         
         chartArea: {width: 800},
 
@@ -67,13 +67,11 @@ function initLine() {
         
         let d = [[0, 0, 'color: green']];
         for (let i = 1; i <= T; i++) {
-            let r, p = d[i - 1][1] + Math.sign(Math.random()-0.5);
-            if (p >= 0) r = [i, p, 'color: green'];
-            if (p < 0) r = [i, p, 'color: red'];
-            d.push(r);
+            let p = d[i - 1][1] + Math.sign(Math.random()-0.5);
+            if (p > 0) d.push([i, p, 'color: green']);
+            if (p < 0) d.push([i, p, 'color: red']);
+            if (p === 0) d.push([i, p, d[i - 1][2]]);
         }
-        
-        console.log(d);
         
         let data = new google.visualization.DataTable();
         data.addColumn('number', 'x');
