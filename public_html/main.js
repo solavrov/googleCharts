@@ -38,6 +38,10 @@ function initLine() {
           title: 'y',
           viewWindow: { max: Y_MAX_START, min: Y_MIN_START}
         },
+        
+        series: {
+            1: { color: 'blue' }
+        },
 
         backgroundColor: '#ffffff',
         width: 900,
@@ -52,9 +56,9 @@ function initLine() {
         legend: {position: 'none'}
         
     };
-
+    
     let lineBut = document.getElementById("lineButton");
-    var chart = new google.visualization.AreaChart(document.getElementById('line'));
+    var chart = new google.visualization.LineChart(document.getElementById('line'));
 
     function draw() {
         
@@ -65,18 +69,24 @@ function initLine() {
         options.vAxis.viewWindow.max = y_max;
         options.vAxis.viewWindow.min = y_min;
         
-        let d = [[0, 0, 'color: green']];
-        for (let i = 1; i <= T; i++) {
-            let p = d[i - 1][1] + Math.sign(Math.random()-0.5);
-            if (p > 0) d.push([i, p, 'color: green']);
-            if (p < 0) d.push([i, p, 'color: red']);
-            if (p === 0) d.push([i, p, d[i - 1][2]]);
+        let d = [
+            [0, null, null, 0],
+            [250, null, null, 10],
+            [0, 0, 'color: green', null]
+        ];
+        let k = d.length;
+        for (let i = k; i < T + k; i++) {
+            let p = d[i - 1][1] + Math.sign(Math.random()-0.5) + 1/25;
+            if (p > 0) d.push([i - k + 1, p, 'color: green', null]);
+            if (p < 0) d.push([i - k + 1, p, 'color: red', null]);
+            if (p === 0) d.push([i - k + 1, p, d[i - 1][2], null]);
         }
         
         let data = new google.visualization.DataTable();
         data.addColumn('number', 'x');
         data.addColumn('number', 'y');
         data.addColumn({type: 'string', role: 'style'});
+        data.addColumn('number', 'y2');
         data.addRows([d[0]]);
         
         function go(i=1) {
