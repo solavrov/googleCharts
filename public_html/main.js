@@ -18,7 +18,7 @@ google.charts.load('current', {'packages':['corechart'], 'language':'ru'});
 const T = 250;
 const Y_MIN_START = -Math.round(1 * Math.sqrt(T));
 const Y_MAX_START = Math.round(1 * Math.sqrt(T));
-//const T_STEP = 1;
+const MEAN = 10;
 const T_DELAY = 20;
 
 google.charts.setOnLoadCallback(initLine);
@@ -47,10 +47,6 @@ function initLine() {
         width: 900,
         height: 500,
         
-//        animation: {
-//            duration: T_STEP
-//        },
-        
         chartArea: {width: 800},
 
         legend: {position: 'none'}
@@ -71,15 +67,15 @@ function initLine() {
         
         let d = [
             [0, null, null, 0],
-            [250, null, null, 10],
+            [T, null, null, 10],
             [0, 0, 'color: green', null]
         ];
-        let k = d.length;
-        for (let i = k; i < T + k; i++) {
-            let p = d[i - 1][1] + Math.sign(Math.random()-0.5) + 1/25;
-            if (p > 0) d.push([i - k + 1, p, 'color: green', null]);
-            if (p < 0) d.push([i - k + 1, p, 'color: red', null]);
-            if (p === 0) d.push([i - k + 1, p, d[i - 1][2], null]);
+        let pathStart = d.length;
+        for (let i = pathStart; i < T + pathStart; i++) {
+            let p = d[i - 1][1] + Math.sign(Math.random()-0.5) + MEAN/T;
+            if (p > 0) d.push([i - pathStart + 1, p, 'color: green', null]);
+            if (p < 0) d.push([i - pathStart + 1, p, 'color: red', null]);
+            if (p === 0) d.push([i - pathStart + 1, p, d[i - 1][2], null]);
         }
         
         let data = new google.visualization.DataTable();
@@ -87,26 +83,27 @@ function initLine() {
         data.addColumn('number', 'y');
         data.addColumn({type: 'string', role: 'style'});
         data.addColumn('number', 'y2');
-        data.addRows([d[0]]);
         
-        function go(i=1) {
-            for (let k = 0; k < 5; k++) {
+        for (let i = 0; i < pathStart; i++) data.addRows([d[i]]);
+        
+        function go(j) {
+            for (let i = j; i < j + 5; i++) {
                 if (d[i][1] > y_max) {
                     options.vAxis.viewWindow.max = y_max = d[i][1]; 
                 }
                 if (d[i][1] < y_min) {
                     options.vAxis.viewWindow.min = y_min = d[i][1];
                 }
-                data.addRows([d[i++]]);
+                data.addRows([d[i]]);
             }
             chart.draw(data, options);
             setTimeout(function() {    
-                if (i - 1 <= T - 5) go(i);
+                if (j + 5 <= T + pathStart - 5) go(j + 5);
                 else lineBut.disabled = false;
             }, T_DELAY);
         }
 
-        go();
+        go(pathStart);
         
     }
     
