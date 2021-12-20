@@ -52,6 +52,8 @@ function initLine() {
 
         legend: {position: 'none'}
         
+//        intervals: { style: 'bars' }
+        
     };
     
     let lineBut = document.getElementById("lineButton");
@@ -59,7 +61,7 @@ function initLine() {
 
     function draw() {
         
-        lineBut.disabled = true;
+        //lineBut.disabled = true;
         
         let y_max =  Y_MAX_START;
         let y_min =  Y_MIN_START;
@@ -85,27 +87,34 @@ function initLine() {
         data.addColumn('number', 'y');
         data.addColumn({type: 'string', role: 'style'});
         data.addColumn('number', 'y2');
+//        data.addColumn({type:'number', role:'interval'});
+//        data.addColumn({type:'number', role:'interval'});
         
-        for (let i = 0; i < pathStart; i++) data.addRows([d[i]]);
+        data.addRows(d);
         
-        function go(j) {
-            for (let i = j; i < j + 5; i++) {
-                if (d[i][1] > y_max) {
-                    options.vAxis.viewWindow.max = y_max = d[i][1]; 
-                }
-                if (d[i][1] < y_min) {
-                    options.vAxis.viewWindow.min = y_min = d[i][1];
-                }
-                data.addRows([d[i]]);
-            }
-            chart.draw(data, options);
-            setTimeout(function() {    
-                if (j + 5 <= T + pathStart - 5) go(j + 5);
-                else lineBut.disabled = false;
-            }, T_DELAY);
-        }
-
-        go(pathStart);
+        chart.draw(data, options);
+        
+        
+//        for (let i = 0; i < pathStart; i++) data.addRows([d[i]]);
+//        
+//        function go(j) {
+//            for (let i = j; i < j + 5; i++) {
+//                if (d[i][1] > y_max) {
+//                    options.vAxis.viewWindow.max = y_max = d[i][1]; 
+//                }
+//                if (d[i][1] < y_min) {
+//                    options.vAxis.viewWindow.min = y_min = d[i][1];
+//                }
+//                data.addRows([d[i]]);
+//            }
+//            chart.draw(data, options);
+//            setTimeout(function() {    
+//                if (j + 5 <= T + pathStart - 5) go(j + 5);
+//                else lineBut.disabled = false;
+//            }, T_DELAY);
+//        }
+//
+//        go(pathStart);
         
     }
     
