@@ -31,12 +31,14 @@ function initLine() {
         title: 'Dynamic line chart',
         
         hAxis: {    
-            title: 'x',
+            title: 'time',
+            titleTextStyle: { italic: false },
             viewWindow: { max: 0, min: T}
         },
 
         vAxis: {
-          title: 'y',
+          title: 'return',
+          titleTextStyle: { italic: false },
           viewWindow: { max: Y_MAX_START, min: Y_MIN_START}
         },
         
@@ -53,7 +55,10 @@ function initLine() {
 
         legend: {position: 'none'},
         
-        intervals: { style: 'bars', barWidth: 20 }
+        intervals: { 
+            style: 'bars', 
+            barWidth: 20 
+        }
         
     };
     
@@ -62,7 +67,7 @@ function initLine() {
 
     function draw() {
         
-        //lineBut.disabled = true;
+        lineBut.disabled = true;
         
         let y_max =  Y_MAX_START;
         let y_min =  Y_MIN_START;
@@ -89,8 +94,8 @@ function initLine() {
         }
         
         let data = new google.visualization.DataTable();
-        data.addColumn('number', 'x');
-        data.addColumn('number', 'y');
+        data.addColumn('number', 'time');
+        data.addColumn('number', 'return');
         data.addColumn({type: 'string', role: 'style'});
         data.addColumn('number', 'y2');
         data.addColumn({type:'number', role:'interval'});
