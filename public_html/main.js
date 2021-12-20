@@ -54,7 +54,7 @@ function initLine() {
     };
     
     let lineBut = document.getElementById("lineButton");
-    var chart = new google.visualization.LineChart(document.getElementById('line'));
+    var chart = new google.visualization.AreaChart(document.getElementById('line'));
 
     function draw() {
         
@@ -65,28 +65,20 @@ function initLine() {
         options.vAxis.viewWindow.max = y_max;
         options.vAxis.viewWindow.min = y_min;
         
-        let d = [
-            [0, null, null, 0],
-            [T, null, null, MEAN],
-            [0, 0, 'color: green', null]
-        ];
-        let pathStart = d.length;
-        for (let i = pathStart; i < T + pathStart; i++) {
+        let d = [ [0, 0, 'color: green', null] ];
+        for (let i = 1; i <= T; i++) {
             //let p = d[i - 1][1] + Math.sign(Math.random()-0.5) + MEAN/T;
             let p = d[i - 1][1] + rnorm(1)[0][0] + MEAN/T;
-            if (p > 0) d.push([i - pathStart + 1, p, 'color: green', null]);
-            if (p < 0) d.push([i - pathStart + 1, p, 'color: red', null]);
-            if (p === 0) d.push([i - pathStart + 1, p, d[i - 1][2], null]);
+            if (p > 0) d.push([i, p, 'color: green']);
+            if (p < 0) d.push([i, p, 'color: red']);
+            if (p === 0) d.push([i, p, d[i - 1][2]]);
         }
         
         let data = new google.visualization.DataTable();
         data.addColumn('number', 'x');
         data.addColumn('number', 'y');
         data.addColumn({type: 'string', role: 'style'});
-        data.addColumn('number', 'y2');
-        
-        for (let i = 0; i < pathStart; i++) data.addRows([d[i]]);
-        
+                
         function go(j) {
             for (let i = j; i < j + 5; i++) {
                 if (d[i][1] > y_max) {
@@ -99,12 +91,12 @@ function initLine() {
             }
             chart.draw(data, options);
             setTimeout(function() {    
-                if (j + 5 <= T + pathStart - 5) go(j + 5);
+                if (j + 5 <= T + 1 - 5) go(j + 5);
                 else lineBut.disabled = false;
             }, T_DELAY);
         }
 
-        go(pathStart);
+        go(1);
         
     }
     
