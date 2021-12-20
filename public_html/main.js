@@ -69,10 +69,8 @@ function initLine() {
         
         lineBut.disabled = true;
         
-        let y_max =  Y_MAX_START;
-        let y_min =  Y_MIN_START;
-        options.vAxis.viewWindow.max = y_max;
-        options.vAxis.viewWindow.min = y_min;
+        let y_max = Y_MAX_START;
+        let y_min = Y_MIN_START;
         
         let d = [];
         
@@ -97,7 +95,7 @@ function initLine() {
         data.addColumn('number', 'time');
         data.addColumn('number', 'return');
         data.addColumn({type: 'string', role: 'style'});
-        data.addColumn('number', 'y2');
+        data.addColumn('number', 'mean');
         data.addColumn({type:'number', role:'interval'});
         data.addColumn({type:'number', role:'interval'});
                 
