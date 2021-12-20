@@ -67,12 +67,13 @@ function initLine() {
         
         let d = [
             [0, null, null, 0],
-            [T, null, null, 10],
+            [T, null, null, MEAN],
             [0, 0, 'color: green', null]
         ];
         let pathStart = d.length;
         for (let i = pathStart; i < T + pathStart; i++) {
-            let p = d[i - 1][1] + Math.sign(Math.random()-0.5) + MEAN/T;
+            //let p = d[i - 1][1] + Math.sign(Math.random()-0.5) + MEAN/T;
+            let p = d[i - 1][1] + rnorm(1)[0][0] + MEAN/T;
             if (p > 0) d.push([i - pathStart + 1, p, 'color: green', null]);
             if (p < 0) d.push([i - pathStart + 1, p, 'color: red', null]);
             if (p === 0) d.push([i - pathStart + 1, p, d[i - 1][2], null]);
