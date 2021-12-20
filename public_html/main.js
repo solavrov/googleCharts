@@ -25,6 +25,9 @@ const Y_MAX_START = MEAN + ALFA_95 * Math.sqrt(T);
 google.charts.setOnLoadCallback(initLine);
 
 function initLine() {
+    
+    let lineBut = document.getElementById("lineButton");
+    var chart = new google.visualization.ComboChart(document.getElementById('line'));
 
     var options = {
         
@@ -61,9 +64,6 @@ function initLine() {
         }
         
     };
-    
-    let lineBut = document.getElementById("lineButton");
-    var chart = new google.visualization.ComboChart(document.getElementById('line'));
 
     function draw() {
         
