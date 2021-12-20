@@ -16,10 +16,11 @@ google.charts.load('current', {'packages':['corechart'], 'language':'ru'});
 // --------------line chart-----------------
 
 const T = 250;
-const Y_MIN_START = -Math.round(1 * Math.sqrt(T));
-const Y_MAX_START = Math.round(1 * Math.sqrt(T));
+const ALFA_95 = 1.645;
 const MEAN = 10;
 const T_DELAY = 20;
+const Y_MIN_START = MEAN - ALFA_95 * Math.sqrt(T);
+const Y_MAX_START = MEAN + ALFA_95 * Math.sqrt(T);
 
 google.charts.setOnLoadCallback(initLine);
 
@@ -40,7 +41,10 @@ function initLine() {
         },
         
         series: {
-            1: { color: 'blue' }
+            0: { type: 'area' },
+            1: { type: 'line', color: 'grey', curveType: 'function' },
+            2: { type: 'line', color: 'grey', curveType: 'function' },
+            3: { type: 'line', color: 'grey', curveType: 'function' }
         },
 
         backgroundColor: '#ffffff',
@@ -54,7 +58,7 @@ function initLine() {
     };
     
     let lineBut = document.getElementById("lineButton");
-    var chart = new google.visualization.LineChart(document.getElementById('line'));
+    var chart = new google.visualization.ComboChart(document.getElementById('line'));
 
     function draw() {
         
@@ -66,17 +70,27 @@ function initLine() {
         options.vAxis.viewWindow.min = y_min;
         
         let d = [
-            [0, null, null, 0],
-            [T, null, null, MEAN],
-            [0, 0, 'color: green', null]
+            [0, null, null, 0, null, null],
+            [T, null, null, MEAN, null, null]
         ];
+        
+        for (let t = 0; t <= 9; t+=1) {
+            d.push([t, null, null, null, MEAN * t / T - ALFA_95 * Math.sqrt(t), MEAN * t / T + ALFA_95 * Math.sqrt(t)]);
+        }
+        
+        for (let t = 10; t <= T; t+=60) {
+            d.push([t, null, null, null, MEAN * t / T - ALFA_95 * Math.sqrt(t), MEAN * t / T + ALFA_95 * Math.sqrt(t)]);
+        }
+        
+        d.push([0, 0, 'color: green', null, null, null]);
+        
         let pathStart = d.length;
         for (let i = pathStart; i < T + pathStart; i++) {
             //let p = d[i - 1][1] + Math.sign(Math.random()-0.5) + MEAN/T;
             let p = d[i - 1][1] + rnorm(1)[0][0] + MEAN/T;
-            if (p > 0) d.push([i - pathStart + 1, p, 'color: green', null]);
-            if (p < 0) d.push([i - pathStart + 1, p, 'color: red', null]);
-            if (p === 0) d.push([i - pathStart + 1, p, d[i - 1][2], null]);
+            if (p > 0) d.push([i - pathStart + 1, p, 'color: green', null, null, null]);
+            if (p < 0) d.push([i - pathStart + 1, p, 'color: red', null, null, null]);
+            if (p === 0) d.push([i - pathStart + 1, p, d[i - 1][2], null, null, null]);
         }
         
         let data = new google.visualization.DataTable();
@@ -84,6 +98,8 @@ function initLine() {
         data.addColumn('number', 'y');
         data.addColumn({type: 'string', role: 'style'});
         data.addColumn('number', 'y2');
+        data.addColumn('number', 'y3');
+        data.addColumn('number', 'y4');
         
         for (let i = 0; i < pathStart; i++) data.addRows([d[i]]);
         
