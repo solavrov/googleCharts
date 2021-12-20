@@ -40,7 +40,8 @@ function initLine() {
         },
         
         series: {
-            1: { color: 'blue' }
+            0: { type: 'area' },
+            1: { type: 'line', color: 'grey' }
         },
 
         backgroundColor: '#ffffff',
@@ -54,7 +55,7 @@ function initLine() {
     };
     
     let lineBut = document.getElementById("lineButton");
-    var chart = new google.visualization.LineChart(document.getElementById('line'));
+    var chart = new google.visualization.ComboChart(document.getElementById('line'));
 
     function draw() {
         
