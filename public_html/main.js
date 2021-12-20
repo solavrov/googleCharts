@@ -10,7 +10,7 @@ import {
     drawColChart
 } from "./charts.js";
 
-google.charts.load('current', {'packages':['corechart'], 'language':'ru'});
+google.charts.load('current', {'packages':['corechart'], 'language':'en'});
 
 
 // --------------line chart-----------------
@@ -28,6 +28,70 @@ function initLine() {
     
     let lineBut = document.getElementById("lineButton");
     var chart = new google.visualization.ComboChart(document.getElementById('line'));
+    
+    ///////////////
+    
+    var options0 = {
+        
+        title: 'Dynamic line chart',
+        
+        hAxis: {    
+            title: 'time',
+            titleTextStyle: { italic: false },
+            viewWindow: { max: 0, min: T}
+        },
+
+        vAxis: {
+          title: 'return',
+          titleTextStyle: { italic: false },
+          viewWindow: { max: Y_MAX_START, min: Y_MIN_START}
+        },
+        
+        series: {
+            0: { type: 'line', color: 'blue' }
+        },
+        
+        lineWidth: 2,
+        width: 900,
+        height: 500,
+        
+        chartArea: { width: 800 },
+
+        legend: { position: 'none' },
+        
+        intervals: { 
+            style: 'bars',
+            barWidth: 0.1,
+            lineWidth: 2
+//            fillOpacity: 1
+        }
+        
+    };
+
+    function draw0() {
+
+        let d = [];
+        
+        for (let t = 0; t <= T; t+=50) {
+            let mean = MEAN * t / T;
+            let div = Math.sqrt(t) * ALFA_95;
+            d.push([t, mean, mean - div, mean + div]);
+        }
+        
+        let data = new google.visualization.DataTable();
+        data.addColumn('number', 'time');
+        data.addColumn('number', 'mean');
+        data.addColumn({type:'number', role:'interval'});
+        data.addColumn({type:'number', role:'interval'});
+        
+        data.addRows(d);
+        
+        chart.draw(data, options0);
+        
+    }
+    
+    
+    ///////////////////////////////
 
     var options = {
         
@@ -50,17 +114,19 @@ function initLine() {
             1: { type: 'line', color: 'blue' }
         },
 
-        backgroundColor: '#ffffff',
+        lineWidth: 2,
         width: 900,
         height: 500,
         
-        chartArea: {width: 800},
+        chartArea: { width: 800 },
 
-        legend: {position: 'none'},
+        legend: { position: 'none' },
         
         intervals: { 
-            style: 'bars', 
-            barWidth: 20 
+            style: 'bars',
+            barWidth: 10,
+            lineWidth: 2
+//            fillOpacity: 1
         }
         
     };
@@ -71,6 +137,9 @@ function initLine() {
         
         let y_max = Y_MAX_START;
         let y_min = Y_MIN_START;
+        
+        options.vAxis.viewWindow.max = y_max;
+        options.vAxis.viewWindow.min = y_min;
         
         let d = [];
         
@@ -122,7 +191,9 @@ function initLine() {
         
     }
     
-    draw();
+    //////////////
+    
+    draw0();
     
     lineBut.addEventListener("click", draw);
 
