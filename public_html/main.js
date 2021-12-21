@@ -18,7 +18,7 @@ google.charts.load('current', {'packages':['corechart'], 'language':'en'});
 const T = 250;
 const ALFA_95 = 1.645;
 const MEAN = 10;
-const T_DELAY = 20;
+const T_DELAY = 10;
 const Y_MIN_START = MEAN - ALFA_95 * Math.sqrt(T);
 const Y_MAX_START = MEAN + ALFA_95 * Math.sqrt(T);
 
@@ -27,18 +27,18 @@ google.charts.setOnLoadCallback(initLine);
 function initLine() {
     
     let lineBut = document.getElementById("lineButton");
-    var chart = new google.visualization.ComboChart(document.getElementById('line'));
+    let chart = new google.visualization.ComboChart(document.getElementById('line'));
     
     ///////////////
     
-    var options0 = {
+    let options0 = {
         
         title: 'Dynamic line chart',
         
         hAxis: {    
             title: 'time',
             titleTextStyle: { italic: false },
-            viewWindow: { max: 0, min: T}
+            viewWindow: { max: 0, min: T + 2}
         },
 
         vAxis: {
@@ -63,7 +63,6 @@ function initLine() {
             style: 'bars',
             barWidth: 0.1,
             lineWidth: 2
-//            fillOpacity: 1
         }
         
     };
@@ -75,7 +74,8 @@ function initLine() {
         for (let t = 0; t <= T; t+=50) {
             let mean = MEAN * t / T;
             let div = Math.sqrt(t) * ALFA_95;
-            d.push([t, mean, mean - div, mean + div]);
+            if (t === 0) d.push([0, 0, null, null]);
+            else d.push([t, mean, mean - div, mean + div]);
         }
         
         let data = new google.visualization.DataTable();
@@ -92,44 +92,18 @@ function initLine() {
     
     
     ///////////////////////////////
-
-    var options = {
-        
-        title: 'Dynamic line chart',
-        
-        hAxis: {    
-            title: 'time',
-            titleTextStyle: { italic: false },
-            viewWindow: { max: 0, min: T}
-        },
-
-        vAxis: {
-          title: 'return',
-          titleTextStyle: { italic: false },
-          viewWindow: { max: Y_MAX_START, min: Y_MIN_START}
-        },
-        
-        series: {
+    
+    let options = {...options0};
+    options.series = {
             0: { type: 'area' },
             1: { type: 'line', color: 'blue' }
-        },
-
-        lineWidth: 2,
-        width: 900,
-        height: 500,
-        
-        chartArea: { width: 800 },
-
-        legend: { position: 'none' },
-        
-        intervals: { 
+        };
+    options.intervals = { 
             style: 'bars',
             barWidth: 10,
             lineWidth: 2
-//            fillOpacity: 1
-        }
-        
-    };
+        };
+
 
     function draw() {
         
@@ -146,7 +120,8 @@ function initLine() {
         for (let t = 0; t <= T; t+=50) {
             let mean = MEAN * t / T;
             let div = Math.sqrt(t) * ALFA_95;
-            d.push([t, null, null, mean, mean - div, mean + div]);
+            if (t === 0) d.push([0, null, null, 0, null, null]);
+            else d.push([t, null, null, mean, mean - div, mean + div]);
         }
         
         d.push([0, 0, 'color: green', null, null, null]);
